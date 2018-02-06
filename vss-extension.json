@@ -1,0 +1,42 @@
+{
+    "manifestVersion": 1,
+    "id": "vsts-terraform-release-task-4-aws",
+    "name": "VSTS Terraform release task for AWS",
+    "version": "0.2.12",
+    "publisher": "e-commerce-labs",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "description": "Terraform on AWS.",
+    "categories": [
+        "Build and release"
+    ],
+    "icons": {
+        "default": "images/extension-icon.png"
+    },
+    "files": [
+        {
+            "path": "task"
+        },
+        {
+            "path": "scripts/terraformonaws.js"
+        },
+        {
+            "path": "scripts/terraformonawsmod.js"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "vsts-terraform-release-task-4-aws-20180206",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "task"
+            }
+        }
+    ]
+}

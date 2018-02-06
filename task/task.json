@@ -1,0 +1,148 @@
+{
+    "id": "A81201AB-236E-4BB9-9A7C-687972FE6384",
+    "name": "vsts-terraform-release-task-4-aws",
+    "friendlyName": "Terraform on AWS",
+    "description": "Terraform on AWS",
+    "helpMarkDown": "",
+    "category": "Deploy",
+    "author": "Marceline Abadeer - e-Commerce Labs",
+    "version": {
+        "Major": 0,
+        "Minor": 2,
+        "Patch": 12
+    },
+    "instanceNameFormat": "Terraform ",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "templatespathinput",
+            "type": "filePath",
+            "label": "Templates Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path where Terraform templates are stored"
+        },
+        {
+            "name": "commandpicklist",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Terraform command to execute",
+            "options": {
+                "commandplan": "Plan",
+                "commandapply": "Apply"
+            }
+        },
+        {
+            "name": "usevariablesfilebool",
+            "type": "boolean",
+            "label": "Use variables file",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to use a variables file"
+        },
+        {
+            "name": "terraformvariablesmultiline",
+            "type": "multiline",
+            "label": "Variables",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Terraform variables",
+            "visibleRule": "usevariablesfilebool == false"
+        },
+        {
+            "name": "variablespathinput",
+            "type": "filePath",
+            "label": "Variables File Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to variables file",
+            "visibleRule": "usevariablesfilebool == true"
+        },
+        {
+            "name": "managestatebool",
+            "type": "boolean",
+            "label": "Manage state in S3",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to manage Terraform's state in S3"
+        },
+        {
+            "name": "awsregionstring",
+            "type": "string",
+            "label": "AWS Region",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "AWS region name",
+            "visibleRule": "managestatebool == true"
+        },
+        {
+            "name": "awsbucketnamestring",
+            "type": "string",
+            "label": "AWS Bucket Name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "AWS bucket name",
+            "visibleRule": "managestatebool == true"
+        },
+        {
+            "name": "awsbucketprefixstring",
+            "type": "string",
+            "label": "AWS Bucket Target Folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "AWS bucket target folder where to upload/download Terraform's state",
+            "visibleRule": "managestatebool == true"
+        },
+        {
+            "name": "installterraformbool",
+            "type": "boolean",
+            "label": "Install Terraform",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to install Terraform on then build agent host",
+            "groupName": "advanced"
+        },
+        {
+            "name": "terraformversiontoinstallstring",
+            "type": "string",
+            "label": "Terraform version",
+            "defaultValue": "Latest",
+            "required": true,
+            "helpMarkDown": "Terraform version to install on the build agent host, use Latest for latest version",
+            "visibleRule": "installterraformbool == true",
+            "groupName": "advanced"
+        },
+        {
+            "name": "terraformpathinput",
+            "type": "filePath",
+            "label": "Terraform path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path where Terraform executable is located, leave it empty if using environment variable (export)",
+            "visibleRule": "installterraformbool == false",
+            "groupName": "advanced"
+        },
+        {
+            "name": "validatetemplatesbool",
+            "type": "boolean",
+            "label": "Validate templates",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to validate templates before using them (terraform validate)",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "scripts/terraformonaws.js"
+        }
+    }
+}
