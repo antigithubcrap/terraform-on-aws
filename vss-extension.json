@@ -1,8 +1,8 @@
 {
     "manifestVersion": 1,
     "id": "vsts-terraform-release-task-4-aws",
-    "name": "VSTS Terraform release task for AWS",
-    "version": "0.2.12",
+    "name": "Terraform on AWS",
+    "version": "0.2.25",
     "publisher": "e-commerce-labs",
     "targets": [
         {
@@ -19,12 +19,6 @@
     "files": [
         {
             "path": "task"
-        },
-        {
-            "path": "scripts/terraformonaws.js"
-        },
-        {
-            "path": "scripts/terraformonawsmod.js"
         }
     ],
     "contributions": [

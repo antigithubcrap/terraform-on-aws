@@ -1,6 +1,8 @@
 node_modules
 .vs
 .taskkey
-*.js
+scripts/*.js
+task/*.js
 *.map
+*.vsix
 package-lock.json

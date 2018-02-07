@@ -3,13 +3,15 @@
     "name": "vsts-terraform-release-task-4-aws",
     "friendlyName": "Terraform on AWS",
     "description": "Terraform on AWS",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More Information](https://github.com/antigithubcrap/vsts-terraform-release-task-4-aws#readme)",
     "category": "Deploy",
+    "visibility": [ "Build", "Release" ],
     "author": "Marceline Abadeer - e-Commerce Labs",
+    "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 12
+        "Patch": 25
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -142,7 +144,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "scripts/terraformonaws.js"
+            "target": "terraformonaws.js"
         }
     }
 }

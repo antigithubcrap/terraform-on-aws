@@ -1,6 +1,6 @@
 {
   "name": "vsts-terraform-release-task-4-aws",
-  "version": "0.2.12",
+  "version": "0.2.25",
   "description": "Terraform on AWS",
   "main": "scripts/terraformonaws.js",
   "scripts": {
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/node": "^9.4.0",
-    "@types/q": "^1.0.7"
+    "@types/q": "^1.0.7",
+    "gulp": "^3.9.1"
   }
 }

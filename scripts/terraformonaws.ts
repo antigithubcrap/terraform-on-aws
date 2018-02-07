@@ -1,10 +1,11 @@
-﻿import tl = require('vsts-task-lib/task');
+﻿import path = require('path');
+import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import mod = require('./terraformonawsmod');
 
 async function run() {
     try {
-        console.log(process.env["PT7HOME"]);
+        console.log(process.env["PATH"]);
         let tool: trm.ToolRunner;
         if (process.platform == 'win32') {
             let cmdPath = tl.which('cmd');
