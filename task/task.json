@@ -1,6 +1,6 @@
 {
     "id": "A81201AB-236E-4BB9-9A7C-687972FE6384",
-    "name": "vsts-terraform-release-task-4-aws",
+    "name": "terraform-on-aws",
     "friendlyName": "Terraform on AWS",
     "description": "Terraform on AWS",
     "helpMarkDown": "[More Information](https://github.com/antigithubcrap/vsts-terraform-release-task-4-aws#readme)",
@@ -11,7 +11,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 25
+        "Patch": 32
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -104,32 +104,12 @@
             "visibleRule": "managestatebool == true"
         },
         {
-            "name": "installterraformbool",
-            "type": "boolean",
-            "label": "Install Terraform",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Check if you want to install Terraform on then build agent host",
-            "groupName": "advanced"
-        },
-        {
-            "name": "terraformversiontoinstallstring",
-            "type": "string",
-            "label": "Terraform version",
-            "defaultValue": "Latest",
-            "required": true,
-            "helpMarkDown": "Terraform version to install on the build agent host, use Latest for latest version",
-            "visibleRule": "installterraformbool == true",
-            "groupName": "advanced"
-        },
-        {
-            "name": "terraformpathinput",
+            "name": "terraformFilePath",
             "type": "filePath",
             "label": "Terraform path",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path where Terraform executable is located, leave it empty if using environment variable (export)",
-            "visibleRule": "installterraformbool == false",
             "groupName": "advanced"
         },
         {

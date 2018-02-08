@@ -1,8 +1,8 @@
 {
     "manifestVersion": 1,
-    "id": "vsts-terraform-release-task-4-aws",
+    "id": "terraform-on-aws",
     "name": "Terraform on AWS",
-    "version": "0.2.25",
+    "version": "0.2.32",
     "publisher": "e-commerce-labs",
     "targets": [
         {
@@ -23,7 +23,7 @@
     ],
     "contributions": [
         {
-            "id": "vsts-terraform-release-task-4-aws-20180206",
+            "id": "terraform-on-aws-20180206",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
