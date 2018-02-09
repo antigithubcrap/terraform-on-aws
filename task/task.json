@@ -2,7 +2,7 @@
     "id": "A81201AB-236E-4BB9-9A7C-687972FE6384",
     "name": "terraform-on-aws",
     "friendlyName": "Terraform on AWS",
-    "description": "Terraform on AWS",
+    "description": "Run Terraform over your Linux build agent host on AWS (with best practices).",
     "helpMarkDown": "[More Information](https://github.com/antigithubcrap/vsts-terraform-release-task-4-aws#readme)",
     "category": "Deploy",
     "visibility": [ "Build", "Release" ],
@@ -11,7 +11,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 32
+        "Patch": 63
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -23,7 +23,7 @@
     ],
     "inputs": [
         {
-            "name": "templatespathinput",
+            "name": "templatesFilePath",
             "type": "filePath",
             "label": "Templates Path",
             "defaultValue": "",
@@ -31,7 +31,7 @@
             "helpMarkDown": "Path where Terraform templates are stored"
         },
         {
-            "name": "commandpicklist",
+            "name": "commandPickList",
             "type": "pickList",
             "label": "Command",
             "defaultValue": "",
@@ -43,7 +43,7 @@
             }
         },
         {
-            "name": "usevariablesfilebool",
+            "name": "useVariablesFileBoolean",
             "type": "boolean",
             "label": "Use variables file",
             "defaultValue": "false",
@@ -51,25 +51,25 @@
             "helpMarkDown": "Check if you want to use a variables file"
         },
         {
-            "name": "terraformvariablesmultiline",
+            "name": "variablesMultiline",
             "type": "multiline",
             "label": "Variables",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Terraform variables",
-            "visibleRule": "usevariablesfilebool == false"
+            "visibleRule": "useVariablesFileBoolean == false"
         },
         {
-            "name": "variablespathinput",
+            "name": "variablesFilePath",
             "type": "filePath",
             "label": "Variables File Path",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Path to variables file",
-            "visibleRule": "usevariablesfilebool == true"
+            "visibleRule": "useVariablesFileBoolean == true"
         },
         {
-            "name": "managestatebool",
+            "name": "manageStateBoolean",
             "type": "boolean",
             "label": "Manage state in S3",
             "defaultValue": "false",
@@ -77,31 +77,40 @@
             "helpMarkDown": "Check if you want to manage Terraform's state in S3"
         },
         {
-            "name": "awsregionstring",
+            "name": "createBackendFileBoolean",
+            "type": "boolean",
+            "label": "Create a S3 Backend File",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to create a backend file specification (backend.tf), if not a S3 backend specification must exist",
+            "visibleRule": "manageStateBoolean == true"
+        },
+        {
+            "name": "awsRegionString",
             "type": "string",
             "label": "AWS Region",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "AWS region name",
-            "visibleRule": "managestatebool == true"
+            "visibleRule": "manageStateBoolean == true"
         },
         {
-            "name": "awsbucketnamestring",
+            "name": "awsBucketNameString",
             "type": "string",
             "label": "AWS Bucket Name",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "AWS bucket name",
-            "visibleRule": "managestatebool == true"
+            "visibleRule": "manageStateBoolean == true"
         },
         {
-            "name": "awsbucketprefixstring",
+            "name": "awsBucketTargeFolderString",
             "type": "string",
             "label": "AWS Bucket Target Folder",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "AWS bucket target folder where to upload/download Terraform's state",
-            "visibleRule": "managestatebool == true"
+            "visibleRule": "manageStateBoolean == true"
         },
         {
             "name": "terraformFilePath",
@@ -113,7 +122,7 @@
             "groupName": "advanced"
         },
         {
-            "name": "validatetemplatesbool",
+            "name": "validateTemplatesBoolean",
             "type": "boolean",
             "label": "Validate templates",
             "defaultValue": "false",

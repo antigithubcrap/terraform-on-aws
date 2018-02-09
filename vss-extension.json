@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "terraform-on-aws",
     "name": "Terraform on AWS",
-    "version": "0.2.32",
+    "version": "0.2.63",
     "publisher": "e-commerce-labs",
     "targets": [
         {
