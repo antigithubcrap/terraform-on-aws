@@ -180,14 +180,19 @@ async function run() {
         if (commandPickList == 'commandplan') {
             terraformCommand
                 .arg('plan')
-                .line(variablesMultiline)
+                .argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath)
                 .arg('-input=false');
-        } else {
+        }
+        else if (commandPickList == 'commandapply') {
             terraformCommand
                 .arg('apply')
                 .arg('-auto-approve')
-                .line(variablesMultiline)
-                .arg('-input=false');;
+                .argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath)
+                .arg('-input=false');
+        }
+
+        if (!isNullOrWhiteSpace(variablesMultiline)) {
+            terraformCommand.line(variablesMultiline);
         }
 
         await terraformInit.exec();
@@ -199,6 +204,11 @@ async function run() {
     catch (e) {
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
+}
+
+function isNullOrWhiteSpace(string: string) {
+    if (string && string.match(/^ *$/) === null) { return false; }
+    return true;
 }
 
 run();

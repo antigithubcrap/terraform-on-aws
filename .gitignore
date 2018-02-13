@@ -3,6 +3,7 @@ node_modules
 .taskkey
 scripts/*.js
 task/*.js
+task/*.png
 *.map
 *.vsix
 package-lock.json

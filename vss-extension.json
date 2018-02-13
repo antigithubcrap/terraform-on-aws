@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "terraform-on-aws",
     "name": "Terraform on AWS",
-    "version": "0.2.63",
+    "version": "0.0.4",
     "publisher": "e-commerce-labs",
     "targets": [
         {
@@ -12,6 +12,19 @@
     "description": "Terraform on AWS.",
     "categories": [
         "Build and release"
+    ],
+    "tags": [
+        "Terraform",
+        "VSTS",
+        "Visual Studio Team Services",
+        "AWS",
+        "IaC",
+        "Infrastructure as Code",
+        "Hashicorp",
+        "Marceline Abadeer",
+        "CI",
+        "CD",
+        "deploy"
     ],
     "icons": {
         "default": "images/extension-icon.png"

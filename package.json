@@ -1,6 +1,6 @@
 {
   "name": "terraform-on-aws",
-  "version": "0.2.63",
+  "version": "0.0.4",
   "description": "Terraform on AWS",
   "main": "scripts/terraformonaws.js",
   "scripts": {
@@ -29,6 +29,8 @@
   "devDependencies": {
     "@types/node": "^9.4.0",
     "@types/q": "^1.0.7",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-image-resize": "^0.13.0",
+    "gulp-rename": "^1.2.2"
   }
 }

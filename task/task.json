@@ -10,8 +10,8 @@
     "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
-        "Minor": 2,
-        "Patch": 63
+        "Minor": 0,
+        "Patch": 4
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -43,21 +43,20 @@
             }
         },
         {
+            "name": "variablesMultiline",
+            "type": "multiline",
+            "label": "Variables",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Terraform variables"
+        },
+        {
             "name": "useVariablesFileBoolean",
             "type": "boolean",
             "label": "Use variables file",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Check if you want to use a variables file"
-        },
-        {
-            "name": "variablesMultiline",
-            "type": "multiline",
-            "label": "Variables",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Terraform variables",
-            "visibleRule": "useVariablesFileBoolean == false"
         },
         {
             "name": "variablesFilePath",
@@ -82,7 +81,7 @@
             "label": "Create a S3 Backend File",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check if you want to create a backend file specification (backend.tf), if not a S3 backend specification must exist",
+            "helpMarkDown": "Check if you want to create a backend file specification (backend.tf), if not, a S3 backend specification must exist",
             "visibleRule": "manageStateBoolean == true"
         },
         {
