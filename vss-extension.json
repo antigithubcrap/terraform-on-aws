@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "terraform-on-aws",
     "name": "Terraform on AWS",
-    "version": "0.0.4",
+    "version": "0.2.0",
     "publisher": "e-commerce-labs",
     "targets": [
         {
@@ -17,6 +17,7 @@
         "Terraform",
         "VSTS",
         "Visual Studio Team Services",
+        "Visual Studio",
         "AWS",
         "IaC",
         "Infrastructure as Code",

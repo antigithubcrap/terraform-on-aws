@@ -10,8 +10,8 @@
     "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 4
+        "Minor": 2,
+        "Patch": 0
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -40,6 +40,9 @@
             "options": {
                 "commandplan": "Plan",
                 "commandapply": "Apply"
+            },
+            "properties": {
+                "EditableOptions": false
             }
         },
         {
@@ -48,7 +51,7 @@
             "label": "Variables",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Terraform variables"
+            "helpMarkDown": "Terraform variables (one per line to avoid incorrect configuration)"
         },
         {
             "name": "useVariablesFileBoolean",
@@ -127,6 +130,15 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Check if you want to validate templates before using them (terraform validate)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "failOnStdErrBoolean",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to fail this task if any errors are written to the StandardError stream",
             "groupName": "advanced"
         }
     ],
