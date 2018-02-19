@@ -15,20 +15,20 @@ The Terraform task allows you to:
 
 ## Task: Terraform on AWS  
 
-### Display Name (required)  
+### Display name (required)  
 
 Task's name
 
 ### Templates path (required)  
 
-Path where Terraform templates are stored (also this path becomes the working folder).  
+Path where Terraform templates are stored (this path becomes the working folder).  
 
 ### Command (required)  
 
 Terraform command to execute.  
 
-- [Plan](https://www.terraform.io/docs/commands/plan.html)  
-- [Apply](https://www.terraform.io/docs/commands/apply.html)  
+- Plan ([terraform plan](https://www.terraform.io/docs/commands/plan.html))  
+- Apply ([terraform apply](https://www.terraform.io/docs/commands/apply.html))  
 
 ### Variables  
 
@@ -50,29 +50,31 @@ Variables must be set with the pattern: -var name=value
 
 Option: Check if you want to use a variables file.  
 
-#### Variables File Path (required)  
+#### Variables file path (required)  
 
 Path to variables file.  
 
-### Manage State in S3  
+### Manage state in S3  
 
 Option: Check if you want to manage Terraform's state in S3.  
 
-#### Create a S3 Backend File  
+#### Create a S3 backend file  
 
 Option: Check if you want to create a backend file specification (backed.tf), if not, a S3 backend specification must exist.  
 
-#### AWS Region (required)  
+#### AWS region (required)  
 
 AWS region name  
 
-#### AWS Bucket Name (required)  
+#### AWS bucket name (required)  
 
 AWS bucket name  
 
-#### AWS Bucket Target Folder (required)  
+#### AWS bucket target folder (required)  
 
-AWS bucket target folder where to upload/download Terraform's state
+AWS bucket target folder where to upload/download Terraform's state.  
+
+- Do not specify Terraform's state file name.
 
 ----
 
@@ -84,7 +86,7 @@ Path where Terraform executable is located, leave it empty if using environment 
 
 ### Validate Templates  
 
-Option: Check if you want template validation before using them ([terraform validate]((https://www.terraform.io/docs/commands/validate.html))).  
+Option: Check if you want template validation before using them ([terraform validate](https://www.terraform.io/docs/commands/validate.html)).  
 
 ### Fail On Standard Error  
 
