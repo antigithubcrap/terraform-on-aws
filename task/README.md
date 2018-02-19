@@ -39,12 +39,12 @@ Variables must be set with the pattern: -var name=value
 - No leading spaces.
 - No quotations (unless within the variable value).
 
->> Examples:
->>  
->> -var region=us-east-1  
->> -var string-with-spaces=This is a string with spaces!  
->> -var filepath=/one/path/file.txt  
->> -var path=\another\path
+> Examples:
+>  
+> -var region=us-east-1  
+> -var string-with-spaces=This is a string with spaces!  
+> -var filepath=/one/path/file.txt  
+> -var path=\another\path
 
 ### Use variables file  
 
