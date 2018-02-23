@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "terraform-on-aws",
     "name": "Terraform on AWS",
-    "version": "0.2.0",
+    "version": "0.3.5",
     "publisher": "e-commerce-labs",
     "targets": [
         {
@@ -27,6 +27,16 @@
         "CD",
         "deploy"
     ],
+    "content": {
+        "details": {
+            "path": "task/README.md"
+        }
+    },
+    "links": {
+        "support": {
+            "uri": "https://github.com/antigithubcrap/terraform-on-aws"
+        }
+    },
     "icons": {
         "default": "images/extension-icon.png"
     },

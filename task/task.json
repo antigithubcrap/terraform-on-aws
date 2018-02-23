@@ -10,8 +10,8 @@
     "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
-        "Minor": 2,
-        "Patch": 0
+        "Minor": 3,
+        "Patch": 5
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -25,10 +25,10 @@
         {
             "name": "templatesFilePath",
             "type": "filePath",
-            "label": "Templates Path",
+            "label": "Templates path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path where Terraform templates are stored"
+            "helpMarkDown": "Path where Terraform templates are stored (this path becomes the working folder)."
         },
         {
             "name": "commandPickList",
@@ -46,12 +46,49 @@
             }
         },
         {
+            "name": "saveGeneratedExecutionPlanBoolean",
+            "type": "boolean",
+            "label": "Save generated execution plan",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to save the generated execution plan (this plan can then be used with terraform apply).",
+            "visibleRule": "commandPickList == commandplan"
+        },
+        {
+            "name": "generatedExecutionPlanName",
+            "type": "string",
+            "label": "Generated execution plan name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Generated execution plan name.",
+            "visibleRule": "saveGeneratedExecutionPlanBoolean == true"
+        },
+        {
+            "name": "useSavedExecutionPlanBoolean",
+            "type": "boolean",
+            "label": "Use saved execution plan",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to use the saved execution plan (from terraform plan).",
+            "visibleRule": "commandPickList == commandapply"
+        },
+        {
+            "name": "savedExecutionPlanName",
+            "type": "string",
+            "label": "Saved execution plan name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Saved execution plan name.",
+            "visibleRule": "useSavedExecutionPlanBoolean == true"
+        },
+        {
             "name": "variablesMultiline",
             "type": "multiline",
             "label": "Variables",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Terraform variables (one per line to avoid incorrect configuration)"
+            "helpMarkDown": "Terraform variables (one per line to avoid incorrect configuration)",
+            "visibleRule": "commandPickList == commandplan || useSavedExecutionPlanBoolean == false"
         },
         {
             "name": "useVariablesFileBoolean",
@@ -59,7 +96,8 @@
             "label": "Use variables file",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check if you want to use a variables file"
+            "helpMarkDown": "Check if you want to use a variables file",
+            "visibleRule": "commandPickList == commandplan || useSavedExecutionPlanBoolean == false"
         },
         {
             "name": "variablesFilePath",
@@ -81,37 +119,37 @@
         {
             "name": "createBackendFileBoolean",
             "type": "boolean",
-            "label": "Create a S3 Backend File",
+            "label": "Create a S3 backend file",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check if you want to create a backend file specification (backend.tf), if not, a S3 backend specification must exist",
+            "helpMarkDown": "Check if you want to create a backend file specification (backend.tf), if not, a S3 backend specification must exist.",
             "visibleRule": "manageStateBoolean == true"
         },
         {
             "name": "awsRegionString",
             "type": "string",
-            "label": "AWS Region",
+            "label": "AWS region",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "AWS region name",
+            "helpMarkDown": "AWS region name.",
             "visibleRule": "manageStateBoolean == true"
         },
         {
             "name": "awsBucketNameString",
             "type": "string",
-            "label": "AWS Bucket Name",
+            "label": "AWS bucket name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "AWS bucket name",
+            "helpMarkDown": "AWS bucket name.",
             "visibleRule": "manageStateBoolean == true"
         },
         {
             "name": "awsBucketTargeFolderString",
             "type": "string",
-            "label": "AWS Bucket Target Folder",
+            "label": "AWS bucket target folder",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "AWS bucket target folder where to upload/download Terraform's state",
+            "helpMarkDown": "AWS bucket target folder where to upload/download Terraform's state.",
             "visibleRule": "manageStateBoolean == true"
         },
         {
@@ -120,7 +158,7 @@
             "label": "Terraform path",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path where Terraform executable is located, leave it empty if using environment variable (export)",
+            "helpMarkDown": "Path where Terraform executable is located, leave it empty if using environment variable (export).",
             "groupName": "advanced"
         },
         {
@@ -129,7 +167,7 @@
             "label": "Validate templates",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check if you want to validate templates before using them (terraform validate)",
+            "helpMarkDown": "Check if you want to validate templates before using them ([terraform validate](https://www.terraform.io/docs/commands/validate.html)).",
             "groupName": "advanced"
         },
         {
@@ -138,7 +176,7 @@
             "label": "Fail on Standard Error",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check if you want to fail this task if any errors are written to the StandardError stream",
+            "helpMarkDown": "Check if you want to fail this task if any errors are written to the StandardError stream.",
             "groupName": "advanced"
         }
     ],

@@ -6,6 +6,10 @@ async function run() {
     try {
         var templatesFilePath: string = tl.getPathInput('templatesFilePath', true, true);
         var commandPickList: string = tl.getInput('commandPickList', true);
+        var saveGeneratedExecutionPlanBoolean: boolean = tl.getBoolInput('saveGeneratedExecutionPlanBoolean', false);
+        var generatedExecutionPlanName: string = tl.getInput('generatedExecutionPlanName', saveGeneratedExecutionPlanBoolean);
+        var useSavedExecutionPlanBoolean: boolean = tl.getBoolInput('useSavedExecutionPlanBoolean', false);
+        var savedExecutionPlanName: string = tl.getInput('savedExecutionPlanName', useSavedExecutionPlanBoolean);
         var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
         var variablesMultiline: string = tl.getInput('variablesMultiline', false);
         var variablesFilePath: string = tl.getPathInput('variablesFilePath', true, useVariablesFileBoolean);
@@ -52,7 +56,7 @@ async function run() {
                 .arg('-auto-approve');
         }
 
-        var commandArgs = variablesMultiline.match(/\-var (\w+(\-{0,1}\w)*)+=.*[^\s]/gm);
+        var commandArgs = variablesMultiline !== null ? variablesMultiline.match(/\-var (\w+(\-{0,1}\w)*)+=.*[^\s]/gm) : null;
 
         terraformCommand.argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath)
 
@@ -62,7 +66,9 @@ async function run() {
             }
         }
 
-        terraformCommand.arg('-input=false');
+        terraformCommand
+            .argIf(commandPickList == 'commandplan' && saveGeneratedExecutionPlanBoolean == true, '-out=' + generatedExecutionPlanName)
+            .arg('-input=false');
 
         await terraformInit.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 
@@ -80,6 +86,8 @@ async function run() {
 
             await terraformValidate.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
         }
+
+        terraformCommand.argIf(commandPickList == 'commandapply' && useSavedExecutionPlanBoolean == true, savedExecutionPlanName);
 
         let terraformResult: number = await terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 
