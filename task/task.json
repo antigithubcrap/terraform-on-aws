@@ -11,7 +11,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 5
+        "Patch": 7
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -169,6 +169,16 @@
             "required": false,
             "helpMarkDown": "Check if you want to validate templates before using them ([terraform validate](https://www.terraform.io/docs/commands/validate.html)).",
             "groupName": "advanced"
+        },
+        {
+            "name": "validateTemplatesVariablesBoolean",
+            "type": "boolean",
+            "label": "Validate templates' variables",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to validate templates' variables.",
+            "groupName": "advanced",
+            "visibleRule": "validateTemplatesBoolean == true"
         },
         {
             "name": "failOnStdErrBoolean",

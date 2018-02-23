@@ -20,6 +20,7 @@ async function run() {
         var awsBucketTargeFolderString: string = tl.getInput('awsBucketTargeFolderString', manageStateBoolean);
         var terraformFilePath: string = tl.getPathInput('terraformFilePath', true, true);
         var validateTemplatesBoolean: boolean = tl.getBoolInput('validateTemplatesBoolean', false);
+        var validateTemplatesVariablesBoolean: boolean = tl.getBoolInput('validateTemplatesVariablesBoolean', false);
         var failOnStdErrBoolean: boolean = tl.getBoolInput('failOnStdErrBoolean', false);
 
         tl.cd(templatesFilePath);
@@ -75,7 +76,7 @@ async function run() {
         if (validateTemplatesBoolean) {
             terraformValidate
                 .arg('validate')
-                .arg('-check-variables=true')
+                .argIf(!validateTemplatesVariablesBoolean, '-check-variables=false')
                 .argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath);
 
             if (commandArgs !== null) {
