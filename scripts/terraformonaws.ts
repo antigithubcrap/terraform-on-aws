@@ -14,30 +14,39 @@ async function run() {
 
         tl.cd(templatesFilePath);
 
-        version(terraformFilePath, failOnStdErrBoolean);
+        await version(terraformFilePath, failOnStdErrBoolean);
 
-        init(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+        await init(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
 
-        let terraformResult: number = 0;
+        let commandResult: number = 0;
 
         if (validateTemplatesBoolean) {
             
-            validate(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+            let validationResult: number = await validate(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+
+            console.log('Validation result: ' + validationResult);
+
+            if (validationResult > 0) {
+
+                tl.setResult(tl.TaskResult.Succeeded, validationResult.toString());
+
+                return;
+            }
         }
 
         switch (commandPickList) {
             case 'commandplan':
-                plan(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+                commandResult = await plan(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
                 break;
             case 'commandapply':
-                apply(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+                commandResult = await apply(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
                 break;
             case 'commanddestroy':
-                destroy(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+                commandResult = await destroy(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
                 break;
         }
 
-        tl.setResult(tl.TaskResult.Succeeded, terraformResult.toString());
+        tl.setResult(tl.TaskResult.Succeeded, commandResult.toString());
     }
     catch (e) {
         
@@ -45,16 +54,16 @@ async function run() {
     }
 }
 
-function version(terraformFilePath: string, failOnStdErrBoolean: boolean) {
+async function version(terraformFilePath: string, failOnStdErrBoolean: boolean) {
     
     var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
 
-    terraformCommand
+    await terraformCommand
         .arg('--version')
         .exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 }
 
-function init(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+async function init(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
     
     var manageStateBoolean: boolean = tl.getBoolInput('manageStateBoolean', false);
     var createBackendFileBoolean: boolean = tl.getBoolInput('createBackendFileBoolean', false);
@@ -80,10 +89,10 @@ function init(terraformFilePath: string, templatesFilePath: string, failOnStdErr
             .arg('-input=false');
     }
 
-    terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+    await terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 }
 
-function validate(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+async function validate(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
     
     var validateTemplatesVariablesBoolean: boolean = tl.getBoolInput('validateTemplatesVariablesBoolean', false);
     var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
@@ -104,10 +113,10 @@ function validate(terraformFilePath: string, templatesFilePath: string, failOnSt
         }
     }
 
-    terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+    return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 }
 
-function plan(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+async function plan(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
 
     var saveGeneratedExecutionPlanBoolean: boolean = tl.getBoolInput('saveGeneratedExecutionPlanBoolean', false);
     var generatedExecutionPlanName: string = tl.getInput('generatedExecutionPlanName', saveGeneratedExecutionPlanBoolean);
@@ -137,7 +146,7 @@ function plan(terraformFilePath: string, templatesFilePath: string, failOnStdErr
     return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 }
 
-function apply(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+async function apply(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
     
     var useSavedExecutionPlanBoolean: boolean = tl.getBoolInput('useSavedExecutionPlanBoolean', false);
     var savedExecutionPlanName: string = tl.getInput('savedExecutionPlanName', useSavedExecutionPlanBoolean);
@@ -168,7 +177,7 @@ function apply(terraformFilePath: string, templatesFilePath: string, failOnStdEr
     return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 }
 
-function destroy(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+async function destroy(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
     
     var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
     var variablesFilePath: string = tl.getPathInput('variablesFilePath', true, useVariablesFileBoolean);
@@ -204,7 +213,9 @@ function getVariables() {
 }
 
 function isNullOrWhiteSpace(string: string) {
+
     if (string && string.match(/^ *$/) === null) { return false; }
+
     return true;
 }
 

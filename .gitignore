@@ -6,4 +6,3 @@ task/*.js
 task/*.png
 *.map
 *.vsix
-package-lock.json
