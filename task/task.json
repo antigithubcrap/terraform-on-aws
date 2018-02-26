@@ -10,8 +10,8 @@
     "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
-        "Minor": 3,
-        "Patch": 7
+        "Minor": 4,
+        "Patch": 0
     },
     "instanceNameFormat": "Terraform ",
     "groups": [

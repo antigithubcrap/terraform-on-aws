@@ -47,11 +47,11 @@ async function run() {
 
 function version(terraformFilePath: string, failOnStdErrBoolean: boolean) {
     
-        var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+    var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
 
-        terraformCommand
-            .arg('--version')
-            .exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+    terraformCommand
+        .arg('--version')
+        .exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 }
 
 function init(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
@@ -196,24 +196,11 @@ function destroy(terraformFilePath: string, templatesFilePath: string, failOnStd
     return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
 }
 
-function output(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
-
-    var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
-
-    var outputJsonFormat: boolean = tl.getBoolInput('outputJsonFormat', false);
-
-    terraformCommand
-        .arg('output')
-        .argIf(outputJsonFormat, '-json');
-
-    return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
-}
-
 function getVariables() {
     
-        var variablesMultiline: string = tl.getInput('variablesMultiline', false);
+    var variablesMultiline: string = tl.getInput('variablesMultiline', false);
 
-        return variablesMultiline !== null ? variablesMultiline.match(/\-var (\w+(\-{0,1}\w)*)+=.*[^\s]/gm) : null;
+    return variablesMultiline !== null ? variablesMultiline.match(/\-var (\w+(\-{0,1}\w)*)+=.*[^\s]/gm) : null;
 }
 
 function isNullOrWhiteSpace(string: string) {
