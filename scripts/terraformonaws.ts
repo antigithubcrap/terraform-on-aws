@@ -1,102 +1,206 @@
-﻿import path = require('path');
+import path = require('path');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 
 async function run() {
+
     try {
+
         var templatesFilePath: string = tl.getPathInput('templatesFilePath', true, true);
         var commandPickList: string = tl.getInput('commandPickList', true);
-        var saveGeneratedExecutionPlanBoolean: boolean = tl.getBoolInput('saveGeneratedExecutionPlanBoolean', false);
-        var generatedExecutionPlanName: string = tl.getInput('generatedExecutionPlanName', saveGeneratedExecutionPlanBoolean);
-        var useSavedExecutionPlanBoolean: boolean = tl.getBoolInput('useSavedExecutionPlanBoolean', false);
-        var savedExecutionPlanName: string = tl.getInput('savedExecutionPlanName', useSavedExecutionPlanBoolean);
-        var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
-        var variablesMultiline: string = tl.getInput('variablesMultiline', false);
-        var variablesFilePath: string = tl.getPathInput('variablesFilePath', true, useVariablesFileBoolean);
-        var manageStateBoolean: boolean = tl.getBoolInput('manageStateBoolean', false);
-        var createBackendFileBoolean: boolean = tl.getBoolInput('createBackendFileBoolean', false);
-        var awsRegionString: string = tl.getInput('awsRegionString', manageStateBoolean);
-        var awsBucketNameString: string = tl.getInput('awsBucketNameString', manageStateBoolean);
-        var awsBucketTargeFolderString: string = tl.getInput('awsBucketTargeFolderString', manageStateBoolean);
         var terraformFilePath: string = tl.getPathInput('terraformFilePath', true, true);
         var validateTemplatesBoolean: boolean = tl.getBoolInput('validateTemplatesBoolean', false);
-        var validateTemplatesVariablesBoolean: boolean = tl.getBoolInput('validateTemplatesVariablesBoolean', false);
         var failOnStdErrBoolean: boolean = tl.getBoolInput('failOnStdErrBoolean', false);
 
         tl.cd(templatesFilePath);
 
-        var terraformVersion: tr.ToolRunner = tl.tool(terraformFilePath);
-        var terraformInit: tr.ToolRunner = tl.tool(terraformFilePath);
-        var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
-        var terraformValidate: tr.ToolRunner = tl.tool(terraformFilePath);
+        version(terraformFilePath, failOnStdErrBoolean);
 
-        await terraformVersion.arg('--version').exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+        init(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
 
-        terraformInit.arg('init');
-
-        if (manageStateBoolean) {
-
-            if (createBackendFileBoolean) {
-                tl.writeFile('backend.tf', 'terraform { backend "s3" {} }');
-            }
-
-            terraformInit
-                .arg('-backend-config=bucket=' + awsBucketNameString)
-                .arg('-backend-config=key=' + awsBucketTargeFolderString + '/terraform.tfstate')
-                .arg('-backend-config=region=' + awsRegionString)
-                .arg('-input=false');
-        }
-
-        if (commandPickList == 'commandplan') {
-            terraformCommand
-                .arg('plan');
-        }
-        else if (commandPickList == 'commandapply') {
-            terraformCommand
-                .arg('apply')
-                .arg('-auto-approve');
-        }
-
-        var commandArgs = variablesMultiline !== null ? variablesMultiline.match(/\-var (\w+(\-{0,1}\w)*)+=.*[^\s]/gm) : null;
-
-        terraformCommand.argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath)
-
-        if (commandArgs !== null) {
-            for (var a = 0; a < commandArgs.length; a++) {
-                terraformCommand.arg(commandArgs[a].replace('-var ', '-var='));
-            }
-        }
-
-        terraformCommand
-            .argIf(commandPickList == 'commandplan' && saveGeneratedExecutionPlanBoolean == true, '-out=' + generatedExecutionPlanName)
-            .arg('-input=false');
-
-        await terraformInit.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+        let terraformResult: number = 0;
 
         if (validateTemplatesBoolean) {
-            terraformValidate
-                .arg('validate')
-                .argIf(!validateTemplatesVariablesBoolean, '-check-variables=false')
-                .argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath);
-
-            if (commandArgs !== null) {
-                for (var a = 0; a < commandArgs.length; a++) {
-                    terraformValidate.arg(commandArgs[a].replace('-var ', '-var='));
-                }
-            }
-
-            await terraformValidate.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+            
+            validate(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
         }
 
-        terraformCommand.argIf(commandPickList == 'commandapply' && useSavedExecutionPlanBoolean == true, savedExecutionPlanName);
-
-        let terraformResult: number = await terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+        switch (commandPickList) {
+            case 'commandplan':
+                plan(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+                break;
+            case 'commandapply':
+                apply(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+                break;
+            case 'commanddestroy':
+                destroy(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
+                break;
+        }
 
         tl.setResult(tl.TaskResult.Succeeded, terraformResult.toString());
     }
     catch (e) {
+        
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
+}
+
+function version(terraformFilePath: string, failOnStdErrBoolean: boolean) {
+    
+    var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+
+    terraformCommand
+        .arg('--version')
+        .exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+}
+
+function init(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+    
+    var manageStateBoolean: boolean = tl.getBoolInput('manageStateBoolean', false);
+    var createBackendFileBoolean: boolean = tl.getBoolInput('createBackendFileBoolean', false);
+    var awsRegionString: string = tl.getInput('awsRegionString', manageStateBoolean);
+    var awsBucketNameString: string = tl.getInput('awsBucketNameString', manageStateBoolean);
+    var awsBucketTargeFolderString: string = tl.getInput('awsBucketTargeFolderString', manageStateBoolean);
+
+    var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+
+    terraformCommand.arg('init');
+
+    if (manageStateBoolean) {
+
+        if (createBackendFileBoolean) {
+            
+            tl.writeFile('backend.tf', 'terraform { backend "s3" {} }');
+        }
+
+        terraformCommand
+            .arg('-backend-config=bucket=' + awsBucketNameString)
+            .arg('-backend-config=key=' + awsBucketTargeFolderString + '/terraform.tfstate')
+            .arg('-backend-config=region=' + awsRegionString)
+            .arg('-input=false');
+    }
+
+    terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+}
+
+function validate(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+    
+    var validateTemplatesVariablesBoolean: boolean = tl.getBoolInput('validateTemplatesVariablesBoolean', false);
+    var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
+    var variablesFilePath: string = tl.getPathInput('variablesFilePath', true, useVariablesFileBoolean);
+
+    var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+
+    terraformCommand
+                .arg('validate')
+                .argIf(!validateTemplatesVariablesBoolean, '-check-variables=false')
+                .argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath);
+
+    var variables = getVariables();
+
+    if (variables) {
+        for (var a = 0; a < variables.length; a++) {
+            terraformCommand.arg(variables[a].replace('-var ', '-var='));
+        }
+    }
+
+    terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+}
+
+function plan(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+
+    var saveGeneratedExecutionPlanBoolean: boolean = tl.getBoolInput('saveGeneratedExecutionPlanBoolean', false);
+    var generatedExecutionPlanName: string = tl.getInput('generatedExecutionPlanName', saveGeneratedExecutionPlanBoolean);
+    var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
+    var variablesFilePath: string = tl.getPathInput('variablesFilePath', true, useVariablesFileBoolean);
+    
+    var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+
+    terraformCommand
+        .arg('plan')
+        .argIf(saveGeneratedExecutionPlanBoolean, '-out=' + generatedExecutionPlanName);
+
+    var variables = getVariables();
+
+    if (variables) {
+        
+        for (var a = 0; a < variables.length; a++) {
+            
+            terraformCommand.arg(variables[a].replace('-var ', '-var='));
+        }
+    }
+
+    terraformCommand
+        .argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath)
+        .arg('-input=false');
+
+    return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+}
+
+function apply(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+    
+    var useSavedExecutionPlanBoolean: boolean = tl.getBoolInput('useSavedExecutionPlanBoolean', false);
+    var savedExecutionPlanName: string = tl.getInput('savedExecutionPlanName', useSavedExecutionPlanBoolean);
+    var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
+    var variablesFilePath: string = tl.getPathInput('variablesFilePath', true, useVariablesFileBoolean);
+
+    var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+
+    terraformCommand
+            .arg('apply')
+            .arg('-auto-approve');
+
+    var variables = getVariables();
+
+    if (variables && !useSavedExecutionPlanBoolean) {
+        
+        for (var a = 0; a < variables.length; a++) {
+            
+            terraformCommand.arg(variables[a].replace('-var ', '-var='));
+        }
+    }
+
+    terraformCommand
+        .argIf(useVariablesFileBoolean && !useSavedExecutionPlanBoolean, '-var-file=' + variablesFilePath)
+        .arg('-input=false')
+        .argIf(useSavedExecutionPlanBoolean, savedExecutionPlanName);
+
+    return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+}
+
+function destroy(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+    
+    var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
+    var variablesFilePath: string = tl.getPathInput('variablesFilePath', true, useVariablesFileBoolean);
+
+    var terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+
+    terraformCommand
+        .arg('destroy')
+        .arg('-force');
+
+    var variables = getVariables();
+
+    if (variables) {
+        
+        for (var a = 0; a < variables.length; a++) {
+            
+            terraformCommand.arg(variables[a].replace('-var ', '-var='));
+        }
+    }
+
+    terraformCommand
+        .argIf(useVariablesFileBoolean, '-var-file=' + variablesFilePath)
+        .arg('-input=false');
+
+    return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+}
+
+function getVariables() {
+    
+    var variablesMultiline: string = tl.getInput('variablesMultiline', false);
+
+    return variablesMultiline !== null ? variablesMultiline.match(/\-var (\w+(\-{0,1}\w)*)+=.*[^\s]/gm) : null;
 }
 
 function isNullOrWhiteSpace(string: string) {

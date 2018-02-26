@@ -10,8 +10,8 @@
     "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
-        "Minor": 3,
-        "Patch": 7
+        "Minor": 4,
+        "Patch": 0
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -39,11 +39,21 @@
             "helpMarkDown": "Terraform command to execute",
             "options": {
                 "commandplan": "Plan",
-                "commandapply": "Apply"
+                "commandapply": "Apply",
+                "commanddestroy": "Destroy"
             },
             "properties": {
                 "EditableOptions": false
             }
+        },
+        {
+            "name": "destroyPlanBoolean",
+            "type": "boolean",
+            "label": "Mark as a destroy plan",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Check if you want to mark this plan as a destroy plan.",
+            "visibleRule": "commandPickList == commandplan"
         },
         {
             "name": "saveGeneratedExecutionPlanBoolean",
