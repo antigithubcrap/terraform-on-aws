@@ -10,8 +10,8 @@
     "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
-        "Minor": 4,
-        "Patch": 4
+        "Minor": 5,
+        "Patch": 3
     },
     "instanceNameFormat": "Terraform ",
     "groups": [
@@ -40,7 +40,8 @@
             "options": {
                 "commandplan": "Plan",
                 "commandapply": "Apply",
-                "commanddestroy": "Destroy"
+                "commanddestroy": "Destroy",
+                "commandoutput": "Output"
             },
             "properties": {
                 "EditableOptions": false
@@ -90,6 +91,24 @@
             "required": true,
             "helpMarkDown": "Saved execution plan name.",
             "visibleRule": "useSavedExecutionPlanBoolean == true"
+        },
+        {
+            "name": "useJsonFormatBoolean",
+            "type": "boolean",
+            "label": "Use JSON format",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to output JSON format.",
+            "visibleRule": "commandPickList == commandoutput"
+        },
+        {
+            "name": "outputVariablesMultiline",
+            "type": "multiline",
+            "label": "Output variables",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Terraform output variables (one per line to avoid incorrect configuration)",
+            "visibleRule": "commandPickList == commandoutput"
         },
         {
             "name": "variablesMultiline",
