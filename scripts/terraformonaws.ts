@@ -1,6 +1,7 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
+import q = require('q');
 
 async function run() {
 
@@ -44,6 +45,8 @@ async function run() {
             case 'commanddestroy':
                 commandResult = await destroy(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
                 break;
+            case 'commandoutput':
+                commandResult = await output(terraformFilePath, templatesFilePath, failOnStdErrBoolean);
         }
 
         tl.setResult(tl.TaskResult.Succeeded, commandResult.toString());
@@ -203,6 +206,62 @@ async function destroy(terraformFilePath: string, templatesFilePath: string, fai
         .arg('-input=false');
 
     return terraformCommand.exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+}
+
+async function output(terraformFilePath: string, templatesFilePath: string, failOnStdErrBoolean: boolean) {
+
+    let useJsonFormatBoolean: boolean = tl.getBoolInput('useJsonFormatBoolean', false);
+    let outputVariablesMultiline: string = tl.getInput('outputVariablesMultiline', false);
+
+    if (!outputVariablesMultiline) {
+
+        let terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+
+        await terraformCommand
+            .arg('output')
+            .argIf(useJsonFormatBoolean, '-json')
+            .exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+    }
+    else {
+
+        let variables2Set = outputVariablesMultiline.match(/.+=.*[^\s]/gm);
+
+        if (variables2Set) {
+
+            for (let a = 0; a < variables2Set.length; a++) {
+
+                let terraformOutput: tr.ToolRunner = tl.tool(terraformFilePath);
+
+                let output = await terraformOutput
+                    .arg('output')
+                    .argIf(useJsonFormatBoolean, '-json')
+                    .arg(variables2Set[a].split('=', 2)[1])
+                    .exec(<any>{ failOnStdErr: failOnStdErrBoolean })
+                    .valueOf();
+
+                console.log('Setting ' + variables2Set[a].split('=', 2)[0] + ' variable with value: ' + output);
+                console.log("##vso[task.setvariable variable=" + variables2Set[a].split('=', 2)[0] + "]" + output);
+            }
+        }
+
+        let variables2Output = outputVariablesMultiline.match(/^[\w\-\.]+$/gm);
+
+        if (variables2Output) {
+
+            for (let a = 0; a < variables2Output.length; a++) {
+
+                let terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
+
+                await terraformCommand
+                    .arg('output')
+                    .argIf(useJsonFormatBoolean, '-json')
+                    .arg(variables2Output)
+                    .exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+            }
+        }
+    }
+
+    return q.Promise<number>(() => { return 0; });
 }
 
 function getVariables() {
