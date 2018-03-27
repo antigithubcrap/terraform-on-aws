@@ -1,6 +1,6 @@
 {
   "name": "terraform-on-aws",
-  "version": "0.5.8",
+  "version": "0.5.10",
   "description": "Terraform on AWS",
   "main": "terraformonaws.js",
   "scripts": {
