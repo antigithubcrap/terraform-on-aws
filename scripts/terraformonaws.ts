@@ -228,12 +228,14 @@ async function output(terraformFilePath: string, templatesFilePath: string, fail
 
     if (!outputVariablesMultiline) {
 
+        console.log("No variables specified, performing a full output...");
+
         let terraformCommand: tr.ToolRunner = tl.tool(terraformFilePath);
 
-        await terraformCommand
+        terraformCommand
             .arg('output')
             .argIf(useJsonFormatBoolean, '-json')
-            .exec(<any>{ failOnStdErr: failOnStdErrBoolean });
+            .execSync(<any>{ failOnStdErr: failOnStdErrBoolean });
     }
     else {
 
@@ -251,8 +253,8 @@ async function output(terraformFilePath: string, templatesFilePath: string, fail
                     .arg(variables2Set[a].split('=', 2)[1])
                     .execSync(<any>{ failOnStdErr: failOnStdErrBoolean });
 
-                console.log('Setting ' + variables2Set[a].split('=', 2)[0] + ' variable with value: ' + output.stdout);
-                console.log("##vso[task.setvariable variable=" + variables2Set[a].split('=', 2)[0] + "]" + output.stdout);
+                console.log('Setting ' + variables2Set[a].split('=', 2)[0] + ' variable with value: ' + output.stdout.replace(/[\r\n\t]/gm, ""));
+                console.log("##vso[task.setvariable variable=" + variables2Set[a].split('=', 2)[0] + "]" + output.stdout.replace(/[\r\n\t]/gm, ""));
             }
         }
 
@@ -264,11 +266,13 @@ async function output(terraformFilePath: string, templatesFilePath: string, fail
 
                 let terraformOutput: tr.ToolRunner = tl.tool(terraformFilePath);
 
-                terraformOutput
+                let output = terraformOutput
                     .arg('output')
                     .argIf(useJsonFormatBoolean, '-json')
-                    .arg(variables2Output)
+                    .arg(variables2Output[a])
                     .execSync(<any>{ failOnStdErr: failOnStdErrBoolean });
+
+                console.log("Variable " + output.stdout + ": " + variables2Output[a]);
             }
         }
     }
