@@ -110,6 +110,7 @@ async function plan(terraformFilePath: string, templatesFilePath: string, failOn
     var generatedExecutionPlanName: string = tl.getInput('generatedExecutionPlanName', saveGeneratedExecutionPlanBoolean);
     var useVariablesFileBoolean: boolean = tl.getBoolInput('useVariablesFileBoolean', false);
     var variablesFilePath: string = tl.getPathInput('variablesFilePath', true, useVariablesFileBoolean);
+    var destroyPlanBoolean: boolean = tl.getBoolInput('destroyPlanBoolean', false);
 
     if (validateTemplatesBoolean) {
 
@@ -129,7 +130,8 @@ async function plan(terraformFilePath: string, templatesFilePath: string, failOn
 
     terraformCommand
         .arg('plan')
-        .argIf(saveGeneratedExecutionPlanBoolean, '-out=' + generatedExecutionPlanName);
+        .argIf(destroyPlanBoolean, '-destroy')
+        .argIf(saveGeneratedExecutionPlanBoolean && !destroyPlanBoolean, '-out=' + generatedExecutionPlanName);
 
     var variables = getVariables();
 
