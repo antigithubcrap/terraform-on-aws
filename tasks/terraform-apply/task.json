@@ -1,0 +1,216 @@
+{
+    "id": "A81201AB-236E-4BB9-9A7C-68797CFE6384",
+    "name": "terraform-on-aws",
+    "friendlyName": "Terraform on AWS - Apply",
+    "description": "Run Terraform over your Linux build agent host on AWS (with best practices).",
+    "helpMarkDown": "[More Information](https://github.com/antigithubcrap/vsts-terraform-release-task-4-aws#readme)",
+    "category": "Deploy",
+    "visibility": [ "Build", "Release" ],
+    "author": "Marceline Abadeer - x-Commerce Labs",
+    "runsOn": [ "Agent" ],
+    "version": {
+        "Major": 0,
+        "Minor": 6,
+        "Patch": 1
+    },
+    "instanceNameFormat": "Terraform $(commandPickList)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "templatesFilePath",
+            "type": "filePath",
+            "label": "Templates path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path where Terraform templates are stored (this path becomes the working folder)."
+        },
+        {
+            "name": "commandPickList",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Terraform command to execute",
+            "options": {
+                "commandplan": "Plan",
+                "commandapply": "Apply"
+            },
+            "properties": {
+                "EditableOptions": false
+            }
+        },
+        {
+            "name": "saveGeneratedExecutionPlanBoolean",
+            "type": "boolean",
+            "label": "Save generated execution plan",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to save the generated execution plan (this plan can then be used with terraform apply).",
+            "visibleRule": "commandPickList == commandplan"
+        },
+        {
+            "name": "generatedExecutionPlanName",
+            "type": "string",
+            "label": "Generated execution plan name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Generated execution plan name.",
+            "visibleRule": "saveGeneratedExecutionPlanBoolean == true"
+        },
+        {
+            "name": "useSavedExecutionPlanBoolean",
+            "type": "boolean",
+            "label": "Use saved execution plan",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to use the saved execution plan (from terraform plan).",
+            "visibleRule": "commandPickList == commandapply"
+        },
+        {
+            "name": "savedExecutionPlanName",
+            "type": "string",
+            "label": "Saved execution plan name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Saved execution plan name.",
+            "visibleRule": "useSavedExecutionPlanBoolean == true"
+        },
+        {
+            "name": "useJsonFormatBoolean",
+            "type": "boolean",
+            "label": "Use JSON format",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to output JSON format.",
+            "visibleRule": "commandPickList == commandoutput"
+        },
+        {
+            "name": "outputVariablesMultiline",
+            "type": "multiline",
+            "label": "Output variables",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Terraform output variables (one per line to avoid incorrect configuration)",
+            "visibleRule": "commandPickList == commandoutput"
+        },
+        {
+            "name": "variablesMultiline",
+            "type": "multiline",
+            "label": "Variables",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Terraform variables (one per line to avoid incorrect configuration)",
+            "visibleRule": "commandPickList == commandplan || useSavedExecutionPlanBoolean == false"
+        },
+        {
+            "name": "useVariablesFileBoolean",
+            "type": "boolean",
+            "label": "Use variables file",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to use a variables file",
+            "visibleRule": "commandPickList == commandplan || useSavedExecutionPlanBoolean == false"
+        },
+        {
+            "name": "variablesFilePath",
+            "type": "filePath",
+            "label": "Variables File Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to variables file",
+            "visibleRule": "useVariablesFileBoolean == true"
+        },
+        {
+            "name": "manageStateBoolean",
+            "type": "boolean",
+            "label": "Manage state in S3",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to manage Terraform's state in S3"
+        },
+        {
+            "name": "createBackendFileBoolean",
+            "type": "boolean",
+            "label": "Create a S3 backend file",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to create a backend file specification (backend.tf), if not, a S3 backend specification must exist.",
+            "visibleRule": "manageStateBoolean == true"
+        },
+        {
+            "name": "awsRegionString",
+            "type": "string",
+            "label": "AWS region",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "AWS region name.",
+            "visibleRule": "manageStateBoolean == true"
+        },
+        {
+            "name": "awsBucketNameString",
+            "type": "string",
+            "label": "AWS bucket name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "AWS bucket name.",
+            "visibleRule": "manageStateBoolean == true"
+        },
+        {
+            "name": "awsBucketTargeFolderString",
+            "type": "string",
+            "label": "AWS bucket target folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "AWS bucket target folder where to upload/download Terraform's state.",
+            "visibleRule": "manageStateBoolean == true"
+        },
+        {
+            "name": "terraformFilePath",
+            "type": "filePath",
+            "label": "Terraform path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path where Terraform executable is located, leave it empty if using environment variable (export).",
+            "groupName": "advanced"
+        },
+        {
+            "name": "validateTemplatesBoolean",
+            "type": "boolean",
+            "label": "Validate templates",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to validate templates before using them ([terraform validate](https://www.terraform.io/docs/commands/validate.html)).",
+            "groupName": "advanced"
+        },
+        {
+            "name": "validateTemplatesVariablesBoolean",
+            "type": "boolean",
+            "label": "Validate templates' variables",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to validate templates' variables.",
+            "groupName": "advanced",
+            "visibleRule": "validateTemplatesBoolean == true"
+        },
+        {
+            "name": "failOnStdErrBoolean",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check if you want to fail this task if any errors are written to the StandardError stream.",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "terraformapply.js"
+        }
+    }
+}

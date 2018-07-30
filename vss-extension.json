@@ -2,14 +2,14 @@
     "manifestVersion": 1,
     "id": "terraform-on-aws",
     "name": "Terraform on AWS",
-    "version": "0.5.11",
-    "publisher": "e-commerce-labs",
+    "version": "0.6.1",
+    "publisher": "x-commerce-labs",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
-    "description": "Terraform on AWS.",
+    "description": "CI/CD task for using Terraform on AWS (with best practices).",
     "categories": [
         "Build and release"
     ],
@@ -29,31 +29,61 @@
     ],
     "content": {
         "details": {
-            "path": "task/README.md"
+            "path": "tasks/README.md"
         }
     },
     "links": {
-        "support": {
+        "repository": {
             "uri": "https://github.com/antigithubcrap/terraform-on-aws"
+        },
+        "issues": {
+            "uri": "https://github.com/antigithubcrap/terraform-on-aws/issues"
+        },
+        "support": {
+            "uri": "mailto:marcelinolopezchi@hotmail.com"
         }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/antigithubcrap/terraform-on-aws"
     },
     "icons": {
         "default": "images/extension-icon.png"
     },
     "files": [
         {
-            "path": "task"
+            "path": "tasks"
         }
     ],
     "contributions": [
         {
-            "id": "terraform-on-aws-20180206",
+            "id": "terraform-on-aws-apply-20180206",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "task"
+                "name": "tasks/terraform-apply"
+            }
+        },
+        {
+            "id": "terraform-on-aws-destroy-20180728",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "tasks/terraform-destroy"
+            }
+        },
+        {
+            "id": "terraform-on-aws-tools-20180728",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "tasks/terraform-tools"
             }
         }
     ]

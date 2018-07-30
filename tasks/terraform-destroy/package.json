@@ -1,0 +1,29 @@
+{
+  "name": "terraform-on-aws",
+  "version": "0.6.1",
+  "description": "Terraform on AWS",
+  "main": "terraformonaws.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antigithubcrap/terraform-on-aws.git"
+  },
+  "keywords": [
+    "vsts",
+    "terraform",
+    "aws",
+    "linux",
+    "visual-studio"
+  ],
+  "author": "Marceline Abadeer - e-Commerce Labs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/antigithubcrap/terraform-on-aws/issues"
+  },
+  "homepage": "https://github.com/antigithubcrap/terraform-on-aws#readme",
+  "dependencies": {
+    "vsts-task-lib": "^2.1.0"
+  }
+}

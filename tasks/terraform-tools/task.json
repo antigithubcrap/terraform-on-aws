@@ -1,19 +1,19 @@
 {
-    "id": "A81201AB-236E-4BB9-9A7C-687972FE6384",
+    "id": "A81201AB-236E-4BA9-9A7C-687972FE6384",
     "name": "terraform-on-aws",
-    "friendlyName": "Terraform on AWS",
+    "friendlyName": "Terraform on AWS - Tools",
     "description": "Run Terraform over your Linux build agent host on AWS (with best practices).",
     "helpMarkDown": "[More Information](https://github.com/antigithubcrap/vsts-terraform-release-task-4-aws#readme)",
     "category": "Deploy",
     "visibility": [ "Build", "Release" ],
-    "author": "Marceline Abadeer - e-Commerce Labs",
+    "author": "Marceline Abadeer - x-Commerce Labs",
     "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
-        "Minor": 5,
-        "Patch": 11
+        "Minor": 6,
+        "Patch": 1
     },
-    "instanceNameFormat": "Terraform ",
+    "instanceNameFormat": "Terraform $(commandPickList)",
     "groups": [
         {
             "name": "advanced",
@@ -34,63 +34,15 @@
             "name": "commandPickList",
             "type": "pickList",
             "label": "Command",
-            "defaultValue": "",
+            "defaultValue": "commandoutput",
             "required": true,
             "helpMarkDown": "Terraform command to execute",
             "options": {
-                "commandplan": "Plan",
-                "commandapply": "Apply",
-                "commanddestroy": "Destroy",
                 "commandoutput": "Output"
             },
             "properties": {
                 "EditableOptions": false
             }
-        },
-        {
-            "name": "destroyPlanBoolean",
-            "type": "boolean",
-            "label": "Mark as a destroy plan",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "Check if you want to mark this plan as a destroy plan.",
-            "visibleRule": "commandPickList == commandplan"
-        },
-        {
-            "name": "saveGeneratedExecutionPlanBoolean",
-            "type": "boolean",
-            "label": "Save generated execution plan",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Check if you want to save the generated execution plan (this plan can then be used with terraform apply).",
-            "visibleRule": "commandPickList == commandplan"
-        },
-        {
-            "name": "generatedExecutionPlanName",
-            "type": "string",
-            "label": "Generated execution plan name",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Generated execution plan name.",
-            "visibleRule": "saveGeneratedExecutionPlanBoolean == true"
-        },
-        {
-            "name": "useSavedExecutionPlanBoolean",
-            "type": "boolean",
-            "label": "Use saved execution plan",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Check if you want to use the saved execution plan (from terraform plan).",
-            "visibleRule": "commandPickList == commandapply"
-        },
-        {
-            "name": "savedExecutionPlanName",
-            "type": "string",
-            "label": "Saved execution plan name",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Saved execution plan name.",
-            "visibleRule": "useSavedExecutionPlanBoolean == true"
         },
         {
             "name": "useJsonFormatBoolean",
@@ -191,25 +143,6 @@
             "groupName": "advanced"
         },
         {
-            "name": "validateTemplatesBoolean",
-            "type": "boolean",
-            "label": "Validate templates",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Check if you want to validate templates before using them ([terraform validate](https://www.terraform.io/docs/commands/validate.html)).",
-            "groupName": "advanced"
-        },
-        {
-            "name": "validateTemplatesVariablesBoolean",
-            "type": "boolean",
-            "label": "Validate templates' variables",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Check if you want to validate templates' variables.",
-            "groupName": "advanced",
-            "visibleRule": "validateTemplatesBoolean == true"
-        },
-        {
             "name": "failOnStdErrBoolean",
             "type": "boolean",
             "label": "Fail on Standard Error",
@@ -221,7 +154,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "terraformonaws.js"
+            "target": "terraformtools.js"
         }
     }
 }

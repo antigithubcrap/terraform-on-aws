@@ -1,36 +1,35 @@
 {
-  "name": "terraform-on-aws",
-  "version": "0.5.11",
-  "description": "Terraform on AWS",
-  "main": "scripts/terraformonaws.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/antigithubcrap/vsts-terraform-release-task-4-aws.git"
-  },
-  "keywords": [
-    "vsts",
-    "terraform",
-    "aws",
-    "linux",
-    "visual-studio"
-  ],
-  "author": "Marceline Abadeer - e-Commerce Labs",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/antigithubcrap/vsts-terraform-release-task-4-aws/issues"
-  },
-  "homepage": "https://github.com/antigithubcrap/vsts-terraform-release-task-4-aws#readme",
-  "dependencies": {
-    "vsts-task-lib": "^2.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "^9.4.0",
-    "@types/q": "^1.0.7",
-    "gulp": "^3.9.1",
-    "gulp-image-resize": "^0.13.0",
-    "gulp-rename": "^1.2.2"
-  }
+    "name": "terraform-on-aws",
+    "version": "0.6.1",
+    "description": "Terraform on AWS",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/antigithubcrap/terraform-on-aws.git"
+    },
+    "keywords": [
+        "vsts",
+        "terraform",
+        "aws",
+        "linux",
+        "visual-studio"
+    ],
+    "author": "Marceline Abadeer - x-Commerce Labs",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/antigithubcrap/terraform-on-aws/issues"
+    },
+    "homepage": "https://github.com/antigithubcrap/terraform-on-aws#readme",
+    "dependencies": {
+        "vsts-task-lib": "^2.1.0"
+    },
+    "devDependencies": {
+        "@types/node": "^9.4.0",
+        "@types/q": "^1.0.7",
+        "gulp": "^3.9.1",
+        "gulp-image-resize": "^0.13.0",
+        "gulp-rename": "^1.2.2"
+    }
 }

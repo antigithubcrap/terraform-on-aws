@@ -4,18 +4,35 @@ var gimageresize = require('gulp-image-resize');
 
 var paths = {
     scripts: {
-        src: 'scripts/*.js',
-        dest: 'task'
+        srcApply: 'scripts/terraform-apply/*.js',
+        destApply: 'tasks/terraform-apply',
+        srcDestroy: 'scripts/terraform-destroy/*.js',
+        destDestroy: 'tasks/terraform-destroy',
+        srcTools: 'scripts/terraform-tools/*.js',
+        destTools: 'tasks/terraform-tools'
     },
     icon: {
         src: 'images/extension-icon.png',
-        dest: 'task'
+        destApply: 'tasks/terraform-apply',
+        destDestroy: 'tasks/terraform-destroy',
+        destTools: 'tasks/terraform-tools'
     }
 };
 
-gulp.task('copyScripts', function () {
-    return gulp.src(paths.scripts.src)
-        .pipe(gulp.dest(paths.scripts.dest));
+gulp.task('copyApplyScripts', function () {
+    return gulp.src(paths.scripts.srcApply)
+        .pipe(gulp.dest(paths.scripts.destApply));
+        
+});
+
+gulp.task('copyDestroyScripts', function () {
+    return gulp.src(paths.scripts.srcDestroy)
+        .pipe(gulp.dest(paths.scripts.destDestroy));
+});
+
+gulp.task('copyToolsScripts', function () {
+    return gulp.src(paths.scripts.srcTools)
+        .pipe(gulp.dest(paths.scripts.destTools));
 });
 
 gulp.task('copyIcon', function () {
@@ -25,7 +42,9 @@ gulp.task('copyIcon', function () {
             height: 32
         }))
         .pipe(grename('icon.png'))
-        .pipe(gulp.dest(paths.icon.dest));
+        .pipe(gulp.dest(paths.icon.destApply))
+        .pipe(gulp.dest(paths.icon.destDestroy))
+        .pipe(gulp.dest(paths.icon.destTools));
 });
 
-gulp.task('default', ['copyScripts', 'copyIcon']);
+gulp.task('default', ['copyApplyScripts', 'copyDestroyScripts', 'copyToolsScripts', 'copyIcon']);
