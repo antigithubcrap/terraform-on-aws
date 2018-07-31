@@ -10,8 +10,8 @@
     "runsOn": [ "Agent" ],
     "version": {
         "Major": 0,
-        "Minor": 6,
-        "Patch": 1
+        "Minor": 0,
+        "Patch": 0
     },
     "instanceNameFormat": "Terraform $(commandPickList)",
     "groups": [
@@ -69,7 +69,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Terraform variables (one per line to avoid incorrect configuration)",
-            "visibleRule": "commandPickList == commandplan || useSavedExecutionPlanBoolean == false"
+            "visibleRule": "commandPickList == commandplan"
         },
         {
             "name": "useVariablesFileBoolean",
@@ -78,7 +78,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Check if you want to use a variables file",
-            "visibleRule": "commandPickList == commandplan || useSavedExecutionPlanBoolean == false"
+            "visibleRule": "commandPickList == commandplan"
         },
         {
             "name": "variablesFilePath",
